@@ -1,6 +1,5 @@
 package com.piasy.expense.transactions;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,26 +10,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.afollestad.materialdialogs.MaterialDialog;
+import android.widget.Toast;
 import com.github.piasy.yamvp.dagger2.YaMvpDiFragment;
 import com.piasy.expense.MainActionsHandler;
 import com.piasy.expense.R;
 import com.piasy.expense.di.ExpenseComponent;
 import com.piasy.expense.model.Category;
 import com.piasy.expense.model.Transaction;
+import com.piasy.expense.utils.TestUtil;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 import java.util.List;
+import javax.inject.Inject;
+import org.threeten.bp.format.DateTimeFormatter;
 
 /**
  * Created by Piasy{github.com/Piasy} on 2020/5/9.
  */
 public class TransactionsFragment
         extends YaMvpDiFragment<TransactionsView, TransactionsPresenter, ExpenseComponent>
-        implements TransactionsView, MainActionsHandler {
+        implements TransactionsView, MainActionsHandler, TransactionAdapter.Listener {
 
     private static final String TAG = "TransactionsFragment";
+
+    @Inject
+    DateTimeFormatter mDateTimeFormatter;
 
     private final Subject<Boolean> mAddActions = PublishSubject.create();
     private final Subject<Transaction> mAddOrUpdateTransaction = PublishSubject.create();
@@ -56,7 +61,7 @@ public class TransactionsFragment
         mCreateCategoryTip.setOnClickListener(v -> mAddActions.onNext(true));
 
         mTransactions = view.findViewById(R.id.transactions);
-        mTransactionAdapter = new TransactionAdapter();
+        mTransactionAdapter = new TransactionAdapter(this, mDateTimeFormatter);
         mTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
         mTransactions.setAdapter(mTransactionAdapter);
     }
@@ -100,15 +105,26 @@ public class TransactionsFragment
     @Override
     public void showCreateTransaction(List<Category> categories) {
         Log.d(TAG, "showCreateTransaction");
+
+        // TODO: real user interaction
+        mAddOrUpdateTransaction.onNext(TestUtil.randomTransaction());
     }
 
     @Override
     public void showCreateCategory() {
         Log.d(TAG, "showCreateCategory");
+
+        // TODO: real user interaction
+        mAddOrUpdateCategory.onNext(TestUtil.nextCategory());
     }
 
     @Override
     public void onAdd() {
         mAddActions.onNext(true);
+    }
+
+    @Override
+    public void editTransaction(final Transaction transaction) {
+        Toast.makeText(getContext(), "TODO editTransaction", Toast.LENGTH_SHORT).show();
     }
 }

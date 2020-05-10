@@ -9,13 +9,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.github.piasy.yamvp.dagger2.YaMvpDiFragment;
 import com.piasy.expense.MainActionsHandler;
 import com.piasy.expense.R;
 import com.piasy.expense.di.ExpenseComponent;
 import com.piasy.expense.model.Category;
+import com.piasy.expense.model.Transaction;
+import com.piasy.expense.utils.TestUtil;
 import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 import java.util.List;
 
 /**
@@ -23,10 +29,14 @@ import java.util.List;
  */
 public class CategoriesFragment
         extends YaMvpDiFragment<CategoriesView, CategoriesPresenter, ExpenseComponent>
-        implements CategoriesView, MainActionsHandler {
+        implements CategoriesView, MainActionsHandler, CategoryAdapter.Listener {
 
     private static final String TAG = "CategoriesFragment";
 
+    private final Subject<Integer> mChangeCurrency = PublishSubject.create();
+    private final Subject<Category> mAddOrUpdateCategory = PublishSubject.create();
+
+    private RadioGroup mCurrency;
     private TextView mCreateCategoryTip;
     private RecyclerView mCategories;
     private CategoryAdapter mCategoryAdapter;
@@ -43,10 +53,19 @@ public class CategoriesFragment
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mCurrency = view.findViewById(R.id.currency);
+        mCurrency.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.nzd) {
+                mChangeCurrency.onNext(Transaction.CURRENCY_NZD);
+            } else if (checkedId == R.id.usd) {
+                mChangeCurrency.onNext(Transaction.CURRENCY_USD);
+            }
+        });
+
         mCreateCategoryTip = view.findViewById(R.id.create_category);
         mCategories = view.findViewById(R.id.categories);
 
-        mCategoryAdapter = new CategoryAdapter();
+        mCategoryAdapter = new CategoryAdapter(this);
         mCategories.setLayoutManager(new LinearLayoutManager(getContext()));
         mCategories.setAdapter(mCategoryAdapter);
     }
@@ -58,12 +77,12 @@ public class CategoriesFragment
 
     @Override
     public Observable<Integer> currencyChanges() {
-        return Observable.empty();
+        return mChangeCurrency;
     }
 
     @Override
     public Observable<Category> categoryChanges() {
-        return Observable.empty();
+        return mAddOrUpdateCategory;
     }
 
     @Override
@@ -85,5 +104,13 @@ public class CategoriesFragment
     @Override
     public void onAdd() {
         Log.d(TAG, "onAdd");
+
+        // TODO: real user interaction
+        mAddOrUpdateCategory.onNext(TestUtil.nextCategory());
+    }
+
+    @Override
+    public void editCategory(final Category category) {
+        Toast.makeText(getContext(), "TODO editCategory", Toast.LENGTH_SHORT).show();
     }
 }

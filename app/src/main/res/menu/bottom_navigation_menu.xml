@@ -8,12 +8,12 @@
 
     <item
             android:id="@+id/bottom_navigation_item_transactions"
-            android:icon="@drawable/trending_up"
+            android:icon="@drawable/transactions"
             android:title="transactions" />
 
     <item
             android:id="@+id/bottom_navigation_item_categories"
-            android:icon="@drawable/trending_up"
+            android:icon="@drawable/categories"
             android:title="categories" />
 
 </menu>
