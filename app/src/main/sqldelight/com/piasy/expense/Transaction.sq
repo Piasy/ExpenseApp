@@ -1,0 +1,18 @@
+import org.threeten.bp.ZonedDateTime;
+
+CREATE TABLE Transactions (
+  id INTEGER PRIMARY KEY,
+  amount REAL NOT NULL,
+  category INTEGER NOT NULL,
+  currency INTEGER AS Integer NOT NULL,
+  date TEXT AS ZonedDateTime NOT NULL
+);
+
+insertTransaction:
+INSERT OR REPLACE INTO Transactions
+(id, amount, category, currency, date)
+VALUES
+(?, ?, ?, ?, ?);
+
+select_all:
+SELECT * FROM Transactions;

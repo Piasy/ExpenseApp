@@ -1,0 +1,16 @@
+CREATE TABLE Categories (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  color TEXT NOT NULL,
+  budget REAL NOT NULL,
+  currency INTEGER AS Integer NOT NULL
+);
+
+insertCategory:
+INSERT OR REPLACE INTO Categories
+(id, name, color, budget, currency)
+VALUES
+(?, ?, ?, ?, ?);
+
+select_all:
+SELECT * FROM Categories;

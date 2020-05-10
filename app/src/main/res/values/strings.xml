@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Expense</string>
+
+    <string name="create_category_tip">create a category</string>
+</resources>

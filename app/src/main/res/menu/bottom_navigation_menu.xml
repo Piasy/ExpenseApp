@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/bottom_navigation_item_stats"
+            android:icon="@drawable/trending_up"
+            android:title="stats" />
+
+    <item
+            android:id="@+id/bottom_navigation_item_transactions"
+            android:icon="@drawable/trending_up"
+            android:title="transactions" />
+
+    <item
+            android:id="@+id/bottom_navigation_item_categories"
+            android:icon="@drawable/trending_up"
+            android:title="categories" />
+
+</menu>
